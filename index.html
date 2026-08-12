@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Our Moments</title>
@@ -16,92 +15,71 @@
     <main class="page">
 
         <header class="header">
-            <h1>sub ❤️ tsuki</h1>
-            <p>사진을 눌러보세요</p>
+            <h1>Our Moments ❤️</h1>
         </header>
 
 
-        <!-- 메인 사진 -->
-        <section id="mainSection" class="main-section">
-
-            <div class="main-photo-wrapper">
-
-                <img id="mainPhoto" src="images/cat.jpg" alt="메인 사진">
-
-                <div class="zoom-guide">
-                    클릭해서 크게 보기
-                </div>
-
-            </div>
-
-            <button id="heartButton" class="heart-button" type="button" aria-label="하트 뿌리기">
-                ❤️
-            </button>
-
-        </section>
-
-
-        <!-- 갤러리 -->
         <section class="gallery">
 
-            <button class="photo-card active" type="button">
+            <button class="photo-card">
                 <img src="images/cat.jpg" alt="사진 1">
             </button>
 
-
-            <button class="photo-card" type="button">
+            <button class="photo-card">
                 <img src="images/basesub.jpg" alt="사진 2">
             </button>
 
-
-            <button class="photo-card" type="button">
+            <button class="photo-card">
                 <img src="images/bbuuu.png" alt="사진 3">
             </button>
 
-
-            <button class="photo-card" type="button">
+            <button class="photo-card">
                 <img src="images/cutetuski.jpg" alt="사진 4">
             </button>
 
-
-            <button class="photo-card" type="button">
+            <button class="photo-card">
                 <img src="images/glass.jpg" alt="사진 5">
             </button>
 
-
-            <button class="photo-card" type="button">
+            <button class="photo-card">
                 <img src="images/insangnecut.jpg" alt="사진 6">
             </button>
 
-
-            <button class="photo-card" type="button">
+            <button class="photo-card">
                 <img src="images/sinhodang.jpg" alt="사진 7">
             </button>
 
         </section>
 
+
+        <div class="heart-control">
+
+            <div id="heartMessage" class="heart-message">
+                츠키야 사랑해 !
+            </div>
+
+            <button id="heartButton" class="heart-button" type="button">
+                ❤️
+            </button>
+
+        </div>
+
     </main>
 
 
-    <!-- ======================
-         전체화면 이미지 뷰어
-    ======================= -->
+    <!-- 이미지 뷰어 -->
 
-    <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div id="lightbox" class="lightbox">
 
-        <button id="closeLightbox" class="close-lightbox" type="button" aria-label="사진 닫기">
+        <button id="closeLightbox" class="close-lightbox">
             ✕
         </button>
 
 
-        <div class="viewer-info">
-            마우스 휠: 확대 · 드래그: 이동 · 더블클릭: 초기화
-        </div>
-
 
         <div id="lightboxArea" class="lightbox-area">
 
-            <img id="lightboxImage" src="" alt="확대된 사진" draggable="false">
+            <img id="lightboxImage" src="" alt="확대 사진" draggable="false">
 
         </div>
 
