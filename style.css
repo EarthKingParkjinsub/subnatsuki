@@ -1,456 +1,657 @@
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-
-    min-height: 100vh;
-
-    font-family: Arial, sans-serif;
-
-    background: linear-gradient(135deg,
-            #fff8fa,
-            #ffeef2);
-
-    color: #333;
-}
-
-
-/* ====================
-   전체
-==================== */
-
-.page {
-    width: min(1100px, 92%);
-
-    margin: 0 auto;
-
-    padding: 50px 0 100px;
-}
-
-
-/* ====================
-   제목
-==================== */
-
-.header {
-    text-align: center;
-
-    margin-bottom: 40px;
-}
-
-.header h1 {
-    margin: 0;
-
-    font-size: 36px;
-}
-
-.header p {
-    margin-top: 10px;
-
-    color: #888;
-}
-
-
-/* ====================
-   갤러리
-==================== */
-
-.gallery {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 18px;
-}
-
-.photo-card {
-    position: relative;
-
-    width: 100%;
-
-    aspect-ratio: 4 / 3;
-
-    padding: 0;
-
-    border: none;
-    border-radius: 20px;
-
-    overflow: hidden;
-
-    background: none;
-
-    cursor: zoom-in;
-
-    box-shadow:
-        0 6px 20px rgba(0, 0, 0, 0.11);
-
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
-}
-
-.photo-card img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    transition:
-        transform 0.5s ease,
-        filter 0.4s ease;
-}
-
-
-/* 사진 hover */
-
-.photo-card:hover {
-    transform:
-        translateY(-8px) scale(1.025);
-
-    box-shadow:
-        0 16px 35px rgba(0, 0, 0, 0.2);
-}
-
-.photo-card:hover img {
-    transform: scale(1.1);
-
-    filter:
-        brightness(1.06) saturate(1.08);
-}
-
-
-/* ====================
-   하트 버튼 영역
-==================== */
-
-/*
-    버튼 + 안녕 글씨 전체를
-    화면 오른쪽 중앙에 고정
-*/
-
-.heart-control {
-    position: fixed;
-
-    right: 30px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    z-index: 5000;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    gap: 8px;
-}
-
-
-/* 버튼 바로 위 안녕 */
-
-.heart-message {
-    color: #ff2f55;
-
-    font-size: 20px;
-    font-weight: bold;
-
-    white-space: nowrap;
-
-    opacity: 0;
-
-    transform: translateY(6px);
-
-    pointer-events: none;
-
-    transition:
-        opacity 1.5s ease,
-        transform 0.4s ease;
-}
-
-
-/* 버튼 누르면 표시 */
-
-.heart-message.show {
-    opacity: 1;
-
-    transform: translateY(0);
-}
-
-
-/* 실제 하트 버튼 */
-
-.heart-button {
-    width: 64px;
-    height: 64px;
-
-    padding: 0;
-
-    border: none;
-    border-radius: 50%;
-
-    background: white;
-
-    font-size: 30px;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 8px 25px rgba(255, 70, 110, 0.3);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.heart-button:hover {
-    transform: scale(1.15);
-
-    box-shadow:
-        0 12px 30px rgba(255, 70, 110, 0.45);
-}
-
-.heart-button:active {
-    transform: scale(0.9);
-}
-
-
-/* ====================
-   이미지 뷰어
-==================== */
-
-.lightbox {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 10000;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background:
-        rgba(0, 0, 0, 0.95);
-
-    opacity: 0;
-
-    visibility: hidden;
-
-    transition:
-        opacity 0.25s ease,
-        visibility 0.25s ease;
-}
-
-.lightbox.open {
-    opacity: 1;
-
-    visibility: visible;
-}
-
-.lightbox-area {
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    overflow: hidden;
-}
-
-#lightboxImage {
-    max-width: 92vw;
-    max-height: 90vh;
-
-    object-fit: contain;
-
-    user-select: none;
-
-    cursor: grab;
-
-    touch-action: none;
-
-    transform-origin: center;
-
-    will-change: transform;
-}
-
-#lightboxImage.dragging {
-    cursor: grabbing;
-}
-
-
-/* 닫기 버튼 */
-
-.close-lightbox {
-    position: absolute;
-
-    top: 25px;
-    right: 30px;
-
-    z-index: 10001;
-
-    width: 50px;
-    height: 50px;
-
-    padding: 0;
-
-    border: none;
-    border-radius: 50%;
-
-    background:
-        rgba(255, 255, 255, 0.15);
-
-    color: white;
-
-    font-size: 24px;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
-}
-
-.close-lightbox:hover {
-    background:
-        rgba(255, 255, 255, 0.3);
-
-    transform: scale(1.08);
-}
-
-
-/* 뷰어 설명 */
-
-.viewer-info {
-    position: absolute;
-
-    top: 30px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    color:
-        rgba(255, 255, 255, 0.7);
-
-    font-size: 13px;
-
-    z-index: 10001;
-}
-
-
-/* ====================
-   떨어지는 하트
-==================== */
-
-.falling-heart {
-    position: fixed;
-
-    top: -60px;
-
-    z-index: 9000;
-
-    pointer-events: none;
-
-    animation:
-        heartFall linear forwards;
-}
-
-@keyframes heartFall {
-
-    0% {
-        transform:
-            translate(0, 0) rotate(0deg);
-
-        opacity: 0;
-    }
-
-    8% {
-        opacity: 1;
-    }
-
-    25% {
-        transform:
-            translate(var(--move1),
-                25vh) rotate(50deg);
-    }
-
-    50% {
-        transform:
-            translate(var(--move2),
-                50vh) rotate(120deg);
-    }
-
-    75% {
-        transform:
-            translate(var(--move3),
-                75vh) rotate(190deg);
-    }
-
-    92% {
-        opacity: 1;
-    }
-
-    100% {
-        transform:
-            translate(var(--move4),
-                110vh) rotate(270deg);
-
-        opacity: 0;
-    }
-}
-
-
-/* ====================
+ {
+     box-sizing: border-box;
+ }
+
+ :root {
+     --pink: #ff5f85;
+     --pink-dark: #f33f6c;
+     --text: #3d3540;
+     --muted: #9b8e98;
+ }
+
+ body {
+     margin: 0;
+     min-height: 100vh;
+     font-family: Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+     color: var(--text);
+     background:
+         radial-gradient(circle at 15% 0%, rgba(255, 210, 224, 0.7), transparent 32%),
+         radial-gradient(circle at 90% 20%, rgba(226, 220, 255, 0.55), transparent 28%),
+         linear-gradient(180deg, #fffafb 0%, #fff3f7 55%, #fffafb 100%);
+     overflow-x: hidden;
+ }
+
+ button {
+     font: inherit;
+ }
+
+ .page {
+     width: min(920px, 92%);
+     margin: 0 auto;
+     padding: 42px 0 70px;
+ }
+
+ .header {
+     text-align: center;
+     margin-bottom: 24px;
+ }
+
+ .eyebrow {
+     margin: 0 0 7px;
+     color: #c79aa8;
+     font-size: 11px;
+     font-weight: 800;
+     letter-spacing: 0.25em;
+ }
+
+ .header h1 {
+     margin: 0;
+     font-size: clamp(30px, 6vw, 44px);
+     letter-spacing: -0.04em;
+ }
+
+ .love-stats {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     gap: 14px;
+     margin: 0 auto 22px;
+ }
+
+ .stat-card {
+     min-height: 128px;
+     padding: 19px 21px;
+     border: 1px solid rgba(255, 255, 255, 0.85);
+     border-radius: 24px;
+     background: rgba(255, 255, 255, 0.7);
+     box-shadow: 0 12px 35px rgba(99, 62, 77, 0.08);
+     backdrop-filter: blur(12px);
+ }
+
+ .next-card {
+     background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 236, 243, 0.9));
+ }
+
+ .stat-label {
+     display: block;
+     margin-bottom: 8px;
+     color: var(--muted);
+     font-size: 13px;
+     font-weight: 700;
+ }
+
+ .stat-number {
+     font-size: 38px;
+     line-height: 1;
+     letter-spacing: -0.05em;
+ }
+
+ .stat-unit {
+     margin-left: 4px;
+     color: #655a63;
+     font-weight: 700;
+ }
+
+ .stat-card small {
+     display: block;
+     margin-top: 10px;
+     color: #ac9ca5;
+     font-size: 12px;
+ }
+
+ .hero-section {
+     margin-bottom: 22px;
+ }
+
+ .carousel {
+     position: relative;
+     width: 100%;
+     aspect-ratio: 16 / 10;
+     overflow: hidden;
+     border: 7px solid rgba(255, 255, 255, 0.78);
+     border-radius: 30px;
+     background: #eee;
+     box-shadow: 0 25px 65px rgba(81, 48, 61, 0.16), 0 3px 10px rgba(81, 48, 61, 0.06);
+     touch-action: pan-y;
+     cursor: grab;
+     user-select: none;
+ }
+
+ .carousel.dragging {
+     cursor: grabbing;
+ }
+
+ .carousel-track {
+     display: flex;
+     width: 100%;
+     height: 100%;
+     transition: transform 1.05s cubic-bezier(0.22, 0.61, 0.36, 1);
+     will-change: transform;
+ }
+
+ .carousel.dragging .carousel-track {
+     transition: none;
+ }
+
+ .slide {
+     min-width: 100%;
+     height: 100%;
+     overflow: hidden;
+     background: #e7e1e4;
+ }
+
+ .slide img {
+     display: block;
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     pointer-events: none;
+     transition: transform 6s ease;
+ }
+
+ .slide.is-active img {
+     transform: scale(1.035);
+ }
+
+ .nav-button {
+     position: absolute;
+     top: 50%;
+     z-index: 3;
+     width: 46px;
+     height: 46px;
+     padding: 0;
+     border: 1px solid rgba(255, 255, 255, 0.5);
+     border-radius: 50%;
+     color: white;
+     background: rgba(0, 0, 0, 0.23);
+     box-shadow: 0 7px 22px rgba(0, 0, 0, 0.15);
+     backdrop-filter: blur(7px);
+     transform: translateY(-50%);
+     cursor: pointer;
+     font-size: 34px;
+     line-height: 1;
+     transition: background 0.2s ease, transform 0.2s ease;
+ }
+
+ .nav-button:hover {
+     background: rgba(0, 0, 0, 0.38);
+     transform: translateY(-50%) scale(1.07);
+ }
+
+ .prev-button {
+     left: 15px;
+ }
+
+ .next-button {
+     right: 15px;
+ }
+
+ .slide-counter {
+     position: absolute;
+     right: 17px;
+     bottom: 15px;
+     z-index: 3;
+     padding: 7px 11px;
+     border-radius: 999px;
+     color: white;
+     background: rgba(0, 0, 0, 0.33);
+     backdrop-filter: blur(7px);
+     font-size: 12px;
+     font-weight: 700;
+ }
+
+ .swipe-hint {
+     margin: 11px 0 0;
+     text-align: center;
+     color: #ad9da6;
+     font-size: 12px;
+ }
+
+ .effect-panel {
+     position: relative;
+     display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     align-items: end;
+     gap: 14px;
+     padding: 17px;
+     border: 1px solid rgba(255, 255, 255, 0.85);
+     border-radius: 27px;
+     background: rgba(255, 255, 255, 0.62);
+     box-shadow: 0 14px 40px rgba(90, 53, 68, 0.09);
+     backdrop-filter: blur(12px);
+ }
+
+ .effect-button {
+     min-height: 88px;
+     padding: 10px 8px;
+     border: 0;
+     border-radius: 22px;
+     background: rgba(255, 255, 255, 0.88);
+     box-shadow: 0 7px 19px rgba(78, 49, 59, 0.08);
+     color: #776b72;
+     cursor: pointer;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 5px;
+     font-size: 12px;
+     font-weight: 800;
+     transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+ }
+
+ .effect-button:hover {
+     transform: translateY(-5px);
+     box-shadow: 0 13px 28px rgba(78, 49, 59, 0.14);
+ }
+
+ .effect-button:active {
+     transform: scale(0.94);
+ }
+
+ .effect-emoji {
+     font-size: 34px;
+     line-height: 1;
+ }
+
+ .heart-wrap {
+     position: relative;
+ }
+
+ .heart-button {
+     width: 100%;
+     background: linear-gradient(145deg, #fff, #fff0f4);
+     box-shadow: 0 9px 26px rgba(255, 72, 113, 0.17);
+ }
+
+ .shark-button {
+     background: linear-gradient(145deg, #fff, #eef8ff);
+ }
+
+ .moon-button {
+     background: linear-gradient(145deg, #fff, #f5f0ff);
+ }
+
+ .heart-message {
+     position: absolute;
+     left: 50%;
+     bottom: calc(100% + 10px);
+     z-index: 8;
+     padding: 8px 12px;
+     border-radius: 999px;
+     color: var(--pink-dark);
+     background: rgba(255, 255, 255, 0.95);
+     box-shadow: 0 8px 24px rgba(255, 70, 110, 0.15);
+     font-size: 13px;
+     font-weight: 800;
+     white-space: nowrap;
+     opacity: 0;
+     pointer-events: none;
+     transform: translate(-50%, 7px) scale(0.96);
+     transition: opacity 1.2s ease, transform 0.35s ease;
+ }
+
+ .heart-message.show {
+     opacity: 1;
+     transform: translate(-50%, 0) scale(1);
+ }
+
+ .footer-message {
+     margin: 24px 0 0;
+     text-align: center;
+     color: #b09fa8;
+     font-size: 13px;
+ }
+
+ .falling-emoji {
+     position: fixed;
+     top: -70px;
+     z-index: 9000;
+     pointer-events: none;
+     animation: emojiFall linear forwards;
+     filter: drop-shadow(0 5px 6px rgba(0, 0, 0, 0.08));
+ }
+
+ @keyframes emojiFall {
+     0% {
+         transform: translate(0, 0) rotate(0deg);
+         opacity: 0;
+     }
+
+     7% {
+         opacity: 1;
+     }
+
+     25% {
+         transform: translate(var(--move1), 25vh) rotate(55deg);
+     }
+
+     50% {
+         transform: translate(var(--move2), 52vh) rotate(130deg);
+     }
+
+     75% {
+         transform: translate(var(--move3), 78vh) rotate(205deg);
+     }
+
+     92% {
+         opacity: 1;
+     }
+
+     100% {
+         transform: translate(var(--move4), 112vh) rotate(285deg);
+         opacity: 0;
+     }
+ }
+
+ .lightbox {
+     position: fixed;
+     inset: 0;
+     z-index: 10000;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     background: rgba(0, 0, 0, 0.95);
+     opacity: 0;
+     visibility: hidden;
+     transition: opacity 0.25s ease, visibility 0.25s ease;
+ }
+
+ .lightbox.open {
+     opacity: 1;
+     visibility: visible;
+ }
+
+ .lightbox-area {
+     width: 100%;
+     height: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     overflow: hidden;
+ }
+
+ #lightboxImage {
+     max-width: 92vw;
+     max-height: 90vh;
+     object-fit: contain;
+     user-select: none;
+     cursor: grab;
+     touch-action: none;
+     transform-origin: center;
+     will-change: transform;
+ }
+
+ #lightboxImage.dragging {
+     cursor: grabbing;
+ }
+
+ .close-lightbox {
+     position: absolute;
+     top: 22px;
+     right: 25px;
+     z-index: 10001;
+     width: 48px;
+     height: 48px;
+     padding: 0;
+     border: 0;
+     border-radius: 50%;
+     color: white;
+     background: rgba(255, 255, 255, 0.14);
+     cursor: pointer;
+     font-size: 22px;
+ }
+
+ @media (max-width: 700px) {
+     .page {
+         width: min(94%, 620px);
+         padding-top: 30px;
+     }
+
+     .love-stats {
+         gap: 9px;
+     }
+
+     .stat-card {
+         min-height: 116px;
+         padding: 16px;
+         border-radius: 20px;
+     }
+
+     .stat-number {
+         font-size: 31px;
+     }
+
+     .carousel {
+         aspect-ratio: 4 / 5;
+         border-width: 5px;
+         border-radius: 25px;
+     }
+
+     .nav-button {
+         width: 39px;
+         height: 39px;
+         font-size: 29px;
+     }
+
+     .prev-button {
+         left: 10px;
+     }
+
+     .next-button {
+         right: 10px;
+     }
+
+     .effect-panel {
+         gap: 9px;
+         padding: 12px;
+         border-radius: 23px;
+     }
+
+     .effect-button {
+         min-height: 78px;
+         border-radius: 18px;
+     }
+
+     .effect-emoji {
+         font-size: 29px;
+     }
+ }
+
+ @media (max-width: 430px) {
+     .stat-card {
+         padding: 14px 12px;
+     }
+
+     .stat-label {
+         font-size: 11px;
+     }
+
+     .stat-number {
+         font-size: 28px;
+     }
+
+     .stat-unit {
+         font-size: 13px;
+     }
+
+     .stat-card small {
+         font-size: 10px;
+     }
+
+     .effect-panel {
+         gap: 7px;
+     }
+
+     .effect-button {
+         min-height: 72px;
+         font-size: 11px;
+     }
+ }
+
+ /* ======================================
+   전체 사진 Grid
+====================================== */
+
+ .photo-gallery-section {
+     margin-top: 48px;
+ }
+
+
+ /* 제목 */
+
+ .gallery-title {
+     text-align: center;
+     margin-bottom: 22px;
+ }
+
+
+ .gallery-title span {
+     display: block;
+
+     margin-bottom: 6px;
+
+     color: #c79aa8;
+
+     font-size: 11px;
+     font-weight: 800;
+
+     letter-spacing: 0.22em;
+ }
+
+
+ .gallery-title h2 {
+     margin: 0;
+
+     font-size: 25px;
+
+     letter-spacing: -0.04em;
+ }
+
+
+ /* ======================================
+   Grid
+====================================== */
+
+ .gallery {
+     display: grid;
+
+     grid-template-columns:
+         repeat(3, 1fr);
+
+     gap: 16px;
+ }
+
+
+ /* 사진 카드 */
+
+ .photo-card {
+     position: relative;
+
+     width: 100%;
+
+     aspect-ratio: 1 / 1;
+
+     padding: 0;
+
+     border: none;
+     border-radius: 20px;
+
+     overflow: hidden;
+
+     background: #eee;
+
+     cursor: zoom-in;
+
+     box-shadow:
+         0 7px 22px rgba(70, 45, 55, 0.10);
+
+     transition:
+         transform 0.3s ease,
+         box-shadow 0.3s ease;
+ }
+
+
+ /* 사진 */
+
+ .photo-card img {
+     display: block;
+
+     width: 100%;
+     height: 100%;
+
+     object-fit: cover;
+
+     transition:
+         transform 0.45s ease,
+         filter 0.3s ease;
+ }
+
+
+ /* PC에서 마우스 올렸을 때 */
+
+ .photo-card:hover {
+     transform:
+         translateY(-6px) scale(1.02);
+
+     box-shadow:
+         0 15px 34px rgba(70, 45, 55, 0.17);
+ }
+
+
+ .photo-card:hover img {
+     transform:
+         scale(1.08);
+
+     filter:
+         brightness(1.04) saturate(1.05);
+ }
+
+
+ /* ======================================
    모바일
-==================== */
+====================================== */
 
-@media (max-width: 700px) {
+ @media (max-width: 700px) {
 
-    .gallery {
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 12px;
-    }
-
-    .header h1 {
-        font-size: 28px;
-    }
-
-    .viewer-info {
-        display: none;
-    }
-
-    .heart-control {
-        right: 15px;
-    }
-
-    .heart-button {
-        width: 52px;
-        height: 52px;
-
-        font-size: 24px;
-    }
-
-    .heart-message {
-        font-size: 17px;
-    }
-}
+     .photo-gallery-section {
+         margin-top: 38px;
+     }
 
 
-@media (max-width: 400px) {
+     .gallery {
+         /*
+            스마트폰에서는
+            2열
+        */
 
-    .gallery {
-        gap: 8px;
-    }
+         grid-template-columns:
+             repeat(2, 1fr);
 
-    .photo-card {
-        border-radius: 13px;
-    }
-}
+         gap: 10px;
+     }
+
+
+     .photo-card {
+         border-radius: 16px;
+     }
+
+
+     .gallery-title h2 {
+         font-size: 22px;
+     }
+
+ }
+
+
+ @media (max-width: 400px) {
+
+     .gallery {
+         gap: 8px;
+     }
+
+
+     .photo-card {
+         border-radius: 13px;
+     }
+
+ }

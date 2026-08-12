@@ -1,9 +1,50 @@
-/* =============================
-   사진 클릭 → 이미지 뷰어
-============================= */
+/* =========================================================
+   기본 DOM 요소
+========================================================= */
+
+const carousel =
+    document.getElementById("carousel");
+
+const carouselTrack =
+    document.getElementById("carouselTrack");
+
+const slides =
+    Array.from(
+        document.querySelectorAll(".slide")
+    );
+
+const prevSlideButton =
+    document.getElementById("prevSlide");
+
+const nextSlideButton =
+    document.getElementById("nextSlide");
+
+const slideCounter =
+    document.getElementById("slideCounter");
+
+
+/*
+    전체 사진 Grid
+*/
 
 const photoCards =
     document.querySelectorAll(".photo-card");
+
+
+/*
+    상어 / 하트 / 달 버튼
+*/
+
+const effectButtons =
+    document.querySelectorAll(".effect-button");
+
+const heartMessage =
+    document.getElementById("heartMessage");
+
+
+/*
+    이미지 뷰어
+*/
 
 const lightbox =
     document.getElementById("lightbox");
@@ -18,275 +59,1412 @@ const closeLightbox =
     document.getElementById("closeLightbox");
 
 
-let scale = 1;
 
-let positionX = 0;
-let positionY = 0;
+/* =========================================================
+   사귄 날짜 계산
 
-let isDragging = false;
+   2026년 6월 10일
+   = 1일째
+========================================================= */
 
-let startX = 0;
-let startY = 0;
-
-
-/* =============================
-   사진 클릭
-============================= */
-
-photoCards.forEach((card) => {
-
-    card.addEventListener("click", () => {
-
-        const image =
-            card.querySelector("img");
-
-        lightboxImage.src =
-            image.src;
-
-        resetViewer();
-
-        lightbox.classList.add("open");
-
-        document.body.style.overflow =
-            "hidden";
-
-    });
-
-});
+const relationshipStart =
+    new Date(
+        2026,
+        5,
+        10
+    );
 
 
-/* =============================
-   이미지 뷰어 닫기
-============================= */
+function startOfLocalDay(date) {
 
-closeLightbox.addEventListener(
-    "click",
-    closeViewer
-);
+    return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+    );
+
+}
 
 
-/* 검은 배경 클릭 */
 
-lightboxArea.addEventListener(
-    "click",
-    (event) => {
+function updateLoveCounter() {
 
-        if (
-            event.target === lightboxArea
-        ) {
+    const today =
+        startOfLocalDay(
+            new Date()
+        );
 
-            closeViewer();
+
+    const start =
+        startOfLocalDay(
+            relationshipStart
+        );
+
+
+    const millisecondsPerDay =
+        24
+        * 60
+        * 60
+        * 1000;
+
+
+    const elapsedDays =
+        Math.floor(
+            (
+                today - start
+            )
+            / millisecondsPerDay
+        );
+
+
+    /*
+        2026-06-10을
+        1일째로 계산
+    */
+
+    const daysTogether =
+        Math.max(
+            1,
+            elapsedDays + 1
+        );
+
+
+    /*
+        다음 100일 단위 기념일
+
+        65일
+        → 100일
+
+        103일
+        → 200일
+
+        250일
+        → 300일
+    */
+
+    const nextMilestone =
+        Math.ceil(
+            daysTogether / 100
+        )
+        * 100;
+
+
+    const daysLeft =
+        nextMilestone
+        - daysTogether;
+
+
+
+    const daysTogetherElement =
+        document.getElementById(
+            "daysTogether"
+        );
+
+
+    const nextMilestoneElement =
+        document.getElementById(
+            "nextMilestone"
+        );
+
+
+    const countdownText =
+        document.getElementById(
+            "countdownText"
+        );
+
+
+
+    if (daysTogetherElement) {
+
+        daysTogetherElement.textContent =
+            daysTogether;
+
+    }
+
+
+
+    if (nextMilestoneElement) {
+
+        nextMilestoneElement.textContent =
+            nextMilestone;
+
+    }
+
+
+
+    if (countdownText) {
+
+        if (daysLeft === 0) {
+
+            countdownText.textContent =
+                `${nextMilestone}일 기념일 · D-DAY ❤️`;
 
         }
+
+        else {
+
+            countdownText.textContent =
+                `${nextMilestone}일까지 D-${daysLeft}`;
+
+        }
+
+    }
+
+}
+
+
+
+/*
+    페이지 실행할 때
+    날짜 계산
+*/
+
+updateLoveCounter();
+
+
+
+/* =========================================================
+   메인 사진 슬라이드
+========================================================= */
+
+let currentIndex = 0;
+
+
+/*
+    자동 슬라이드 간격
+
+    5500 = 5.5초
+
+    더 느리게 하고 싶으면
+    7000 ~ 8000 추천
+*/
+
+const autoSlideDelay =
+    5500;
+
+
+let autoSlideTimer =
+    null;
+
+
+
+/* =========================================================
+   특정 슬라이드 보여주기
+========================================================= */
+
+function showSlide(
+    index,
+    animate = true
+) {
+
+    if (
+        slides.length === 0
+        ||
+        !carouselTrack
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+        무한 반복
+
+        마지막 → 첫 번째
+
+        첫 번째에서 이전
+        → 마지막
+    */
+
+    currentIndex =
+        (
+            index
+            + slides.length
+        )
+        % slides.length;
+
+
+
+    /*
+        애니메이션 여부
+    */
+
+    if (!animate) {
+
+        carouselTrack.style.transition =
+            "none";
+
+    }
+
+    else {
+
+        carouselTrack.style.transition =
+            "";
+
+    }
+
+
+
+    /*
+        사진 위치 이동
+    */
+
+    carouselTrack.style.transform =
+        `translateX(-${currentIndex * 100}%)`;
+
+
+
+    /*
+        현재 사진 표시
+    */
+
+    slides.forEach(
+        (
+            slide,
+            slideIndex
+        ) => {
+
+            slide.classList.toggle(
+                "is-active",
+                slideIndex
+                === currentIndex
+            );
+
+        }
+    );
+
+
+
+    /*
+        1 / 9
+        같은 카운터
+    */
+
+    if (slideCounter) {
+
+        slideCounter.textContent =
+            `${currentIndex + 1} / ${slides.length}`;
+
+    }
+
+
+
+    if (!animate) {
+
+        requestAnimationFrame(
+            () => {
+
+                carouselTrack.style.transition =
+                    "";
+
+            }
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   다음 사진
+========================================================= */
+
+function nextSlide() {
+
+    showSlide(
+        currentIndex + 1
+    );
+
+}
+
+
+
+/* =========================================================
+   이전 사진
+========================================================= */
+
+function previousSlide() {
+
+    showSlide(
+        currentIndex - 1
+    );
+
+}
+
+
+
+/* =========================================================
+   자동 슬라이드 시작
+========================================================= */
+
+function startAutoSlide() {
+
+    stopAutoSlide();
+
+
+    if (slides.length <= 1) {
+
+        return;
+
+    }
+
+
+    autoSlideTimer =
+        setInterval(
+            nextSlide,
+            autoSlideDelay
+        );
+
+}
+
+
+
+/* =========================================================
+   자동 슬라이드 정지
+========================================================= */
+
+function stopAutoSlide() {
+
+    if (autoSlideTimer) {
+
+        clearInterval(
+            autoSlideTimer
+        );
+
+
+        autoSlideTimer =
+            null;
+
+    }
+
+}
+
+
+
+/* =========================================================
+   좌우 화살표 버튼
+========================================================= */
+
+if (prevSlideButton) {
+
+    prevSlideButton.addEventListener(
+        "click",
+        () => {
+
+            previousSlide();
+
+            startAutoSlide();
+
+        }
+    );
+
+}
+
+
+
+if (nextSlideButton) {
+
+    nextSlideButton.addEventListener(
+        "click",
+        () => {
+
+            nextSlide();
+
+            startAutoSlide();
+
+        }
+    );
+
+}
+
+
+
+/*
+    첫 번째 사진 표시
+*/
+
+showSlide(0);
+
+
+/*
+    자동 슬라이드 시작
+*/
+
+startAutoSlide();
+
+
+
+/* =========================================================
+   메인 사진
+   터치 / 마우스 드래그
+========================================================= */
+
+let carouselDragging =
+    false;
+
+
+let carouselStartX =
+    0;
+
+
+let carouselCurrentX =
+    0;
+
+
+/*
+    사진을 실제로 밀었는지
+*/
+
+let carouselMoved =
+    false;
+
+
+
+/* =========================================================
+   사진 누르기 시작
+========================================================= */
+
+if (carousel) {
+
+    carousel.addEventListener(
+        "pointerdown",
+        (event) => {
+
+            /*
+                화살표 버튼을 누른 경우
+                드래그 시작 X
+            */
+
+            if (
+                event.target.closest(
+                    ".nav-button"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            carouselDragging =
+                true;
+
+
+            carouselMoved =
+                false;
+
+
+            carouselStartX =
+                event.clientX;
+
+
+            carouselCurrentX =
+                event.clientX;
+
+
+            carousel.classList.add(
+                "dragging"
+            );
+
+
+            /*
+                사람이 조작하는 동안
+                자동 슬라이드 정지
+            */
+
+            stopAutoSlide();
+
+
+            try {
+
+                carousel.setPointerCapture(
+                    event.pointerId
+                );
+
+            }
+
+            catch (error) {
+
+                /*
+                    일부 브라우저에서
+                    실패해도 무시
+                */
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   손가락 / 마우스 움직이는 중
+========================================================= */
+
+if (carousel) {
+
+    carousel.addEventListener(
+        "pointermove",
+        (event) => {
+
+            if (!carouselDragging) {
+
+                return;
+
+            }
+
+
+            carouselCurrentX =
+                event.clientX;
+
+
+            const deltaX =
+                carouselCurrentX
+                - carouselStartX;
+
+
+
+            /*
+                5px 이상 이동하면
+                단순 클릭이 아니라
+                드래그로 판단
+            */
+
+            if (
+                Math.abs(deltaX) > 5
+            ) {
+
+                carouselMoved =
+                    true;
+
+            }
+
+
+
+            /*
+                손가락 움직임에 따라
+                사진도 같이 따라옴
+            */
+
+            const dragPercent =
+                (
+                    deltaX
+                    / carousel.clientWidth
+                )
+                * 100;
+
+
+
+            carouselTrack.style.transform =
+                `
+                translateX(
+                    calc(
+                        -${currentIndex * 100}%
+                        + ${dragPercent}%
+                    )
+                )
+                `;
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   손가락 / 마우스 떼기
+========================================================= */
+
+if (carousel) {
+
+    carousel.addEventListener(
+        "pointerup",
+        finishCarouselDrag
+    );
+
+
+    carousel.addEventListener(
+        "pointercancel",
+        finishCarouselDrag
+    );
+
+}
+
+
+
+function finishCarouselDrag(
+    event
+) {
+
+    if (!carouselDragging) {
+
+        return;
+
+    }
+
+
+    const deltaX =
+        carouselCurrentX
+        - carouselStartX;
+
+
+    carouselDragging =
+        false;
+
+
+    carousel.classList.remove(
+        "dragging"
+    );
+
+
+
+    try {
+
+        carousel.releasePointerCapture(
+            event.pointerId
+        );
+
+    }
+
+    catch (error) {
+
+        /*
+            이미 해제됐으면 무시
+        */
+
+    }
+
+
+
+    /*
+        화면 너비의 14%
+
+        또는 최소 55px 이상
+        밀었을 때만 사진 변경
+    */
+
+    const threshold =
+        Math.max(
+            55,
+            carousel.clientWidth
+            * 0.14
+        );
+
+
+
+    /*
+        왼쪽으로 밀기
+        → 다음 사진
+    */
+
+    if (
+        deltaX
+        <= -threshold
+    ) {
+
+        nextSlide();
+
+    }
+
+
+    /*
+        오른쪽으로 밀기
+        → 이전 사진
+    */
+
+    else if (
+        deltaX
+        >= threshold
+    ) {
+
+        previousSlide();
+
+    }
+
+
+    /*
+        조금만 밀었으면
+        현재 사진으로 복귀
+    */
+
+    else {
+
+        showSlide(
+            currentIndex
+        );
+
+    }
+
+
+
+    startAutoSlide();
+
+}
+
+
+
+/* =========================================================
+   이미지 뷰어 열기
+
+   메인 슬라이드와
+   Grid 사진이 이 함수를 같이 사용
+========================================================= */
+
+function openViewer(
+    imageSrc
+) {
+
+    if (
+        !lightbox
+        ||
+        !lightboxImage
+    ) {
+
+        return;
+
+    }
+
+
+    lightboxImage.src =
+        imageSrc;
+
+
+    resetViewer();
+
+
+    lightbox.classList.add(
+        "open"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    /*
+        사진 보는 동안에는
+        뒤의 메인 슬라이드 정지
+    */
+
+    stopAutoSlide();
+
+}
+
+
+
+/* =========================================================
+   메인 사진 클릭
+   → 이미지 뷰어
+========================================================= */
+
+if (carousel) {
+
+    carousel.addEventListener(
+        "click",
+        (event) => {
+
+            /*
+                사용자가 사진을
+                옆으로 밀었다면
+
+                클릭으로 처리하지 않음
+            */
+
+            if (carouselMoved) {
+
+                carouselMoved =
+                    false;
+
+                return;
+
+            }
+
+
+
+            /*
+                화살표 버튼을
+                클릭한 경우도 제외
+            */
+
+            if (
+                event.target.closest(
+                    ".nav-button"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+
+            if (
+                slides.length === 0
+            ) {
+
+                return;
+
+            }
+
+
+
+            const activeImage =
+                slides[
+                    currentIndex
+                ]
+                    .querySelector(
+                        "img"
+                    );
+
+
+
+            if (!activeImage) {
+
+                return;
+
+            }
+
+
+
+            openViewer(
+                activeImage.src
+            );
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   전체 Grid 사진 클릭
+   → 이미지 뷰어
+========================================================= */
+
+photoCards.forEach(
+    (card) => {
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                const image =
+                    card.querySelector(
+                        "img"
+                    );
+
+
+                if (!image) {
+
+                    return;
+
+                }
+
+
+                openViewer(
+                    image.src
+                );
+
+            }
+        );
 
     }
 );
 
 
-/* ESC로 닫기 */
+
+/* =========================================================
+   이미지 뷰어 닫기
+========================================================= */
+
+if (closeLightbox) {
+
+    closeLightbox.addEventListener(
+        "click",
+        closeViewer
+    );
+
+}
+
+
+
+/*
+    검은 배경 부분 클릭
+    → 닫기
+*/
+
+if (lightboxArea) {
+
+    lightboxArea.addEventListener(
+        "click",
+        (event) => {
+
+            if (
+                event.target
+                === lightboxArea
+            ) {
+
+                closeViewer();
+
+            }
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   키보드 조작
+========================================================= */
 
 document.addEventListener(
     "keydown",
     (event) => {
 
+        /*
+            이미지 뷰어 열려 있을 때
+        */
+
         if (
-            event.key === "Escape"
+            lightbox
             &&
             lightbox.classList.contains(
                 "open"
             )
         ) {
 
-            closeViewer();
+            /*
+                ESC
+                → 뷰어 닫기
+            */
+
+            if (
+                event.key
+                === "Escape"
+            ) {
+
+                closeViewer();
+
+            }
+
+
+            return;
+
+        }
+
+
+
+        /*
+            평상시
+
+            ← 키
+            → 이전 사진
+        */
+
+        if (
+            event.key
+            === "ArrowLeft"
+        ) {
+
+            previousSlide();
+
+            startAutoSlide();
+
+        }
+
+
+
+        /*
+            → 키
+            → 다음 사진
+        */
+
+        if (
+            event.key
+            === "ArrowRight"
+        ) {
+
+            nextSlide();
+
+            startAutoSlide();
 
         }
 
     }
 );
+
 
 
 function closeViewer() {
 
-    lightbox.classList.remove("open");
+    if (!lightbox) {
 
-    document.body.style.overflow = "";
+        return;
+
+    }
+
+
+    lightbox.classList.remove(
+        "open"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+
+    /*
+        다시 메인 사진
+        자동 슬라이드 시작
+    */
+
+    startAutoSlide();
 
 }
 
 
-/* =============================
-   마우스 휠 확대 / 축소
-============================= */
 
-lightboxImage.addEventListener(
-    "wheel",
-    (event) => {
+/* =========================================================
+   이미지 뷰어 확대 / 축소
+========================================================= */
 
-        event.preventDefault();
+let scale =
+    1;
 
 
-        if (event.deltaY < 0) {
+let positionX =
+    0;
 
-            scale += 0.25;
 
-        } else {
+let positionY =
+    0;
 
-            scale -= 0.25;
 
+let isDragging =
+    false;
+
+
+let startX =
+    0;
+
+
+let startY =
+    0;
+
+
+
+/* =========================================================
+   마우스 휠
+
+   1배 ~ 5배
+========================================================= */
+
+if (lightboxImage) {
+
+    lightboxImage.addEventListener(
+        "wheel",
+        (event) => {
+
+            event.preventDefault();
+
+
+
+            /*
+                위로 휠
+                → 확대
+            */
+
+            if (
+                event.deltaY < 0
+            ) {
+
+                scale +=
+                    0.25;
+
+            }
+
+
+            /*
+                아래로 휠
+                → 축소
+            */
+
+            else {
+
+                scale -=
+                    0.25;
+
+            }
+
+
+
+            /*
+                최소 1배
+
+                최대 5배
+            */
+
+            scale =
+                Math.min(
+                    Math.max(
+                        scale,
+                        1
+                    ),
+                    5
+                );
+
+
+
+            /*
+                다시 1배가 되면
+                사진 중앙으로
+            */
+
+            if (
+                scale === 1
+            ) {
+
+                positionX =
+                    0;
+
+
+                positionY =
+                    0;
+
+            }
+
+
+
+            updateTransform();
+
+        },
+        {
+            passive: false
         }
-
-
-        /* 최소 1배, 최대 5배 */
-
-        scale =
-            Math.min(
-                Math.max(scale, 1),
-                5
-            );
-
-
-        /* 다시 1배가 되면 중앙 */
-
-        if (scale === 1) {
-
-            positionX = 0;
-            positionY = 0;
-
-        }
-
-
-        updateTransform();
-
-    },
-    {
-        passive: false
-    }
-);
-
-
-/* =============================
-   드래그 이동
-============================= */
-
-lightboxImage.addEventListener(
-    "pointerdown",
-    (event) => {
-
-        /*
-            확대하지 않은 상태에서는
-            드래그 불가능
-        */
-
-        if (scale <= 1) {
-            return;
-        }
-
-
-        isDragging = true;
-
-
-        startX =
-            event.clientX
-            - positionX;
-
-        startY =
-            event.clientY
-            - positionY;
-
-
-        lightboxImage.classList.add(
-            "dragging"
-        );
-
-
-        lightboxImage.setPointerCapture(
-            event.pointerId
-        );
-
-    }
-);
-
-
-lightboxImage.addEventListener(
-    "pointermove",
-    (event) => {
-
-        if (!isDragging) {
-            return;
-        }
-
-
-        positionX =
-            event.clientX
-            - startX;
-
-        positionY =
-            event.clientY
-            - startY;
-
-
-        updateTransform();
-
-    }
-);
-
-
-lightboxImage.addEventListener(
-    "pointerup",
-    stopDragging
-);
-
-
-lightboxImage.addEventListener(
-    "pointercancel",
-    stopDragging
-);
-
-
-function stopDragging() {
-
-    isDragging = false;
-
-    lightboxImage.classList.remove(
-        "dragging"
     );
 
 }
 
 
-/* =============================
-   더블클릭
-============================= */
 
-lightboxImage.addEventListener(
-    "dblclick",
-    () => {
+/* =========================================================
+   확대된 사진 누르기
+========================================================= */
 
-        if (scale === 1) {
+if (lightboxImage) {
 
-            scale = 2;
+    lightboxImage.addEventListener(
+        "pointerdown",
+        (event) => {
 
-        } else {
+            /*
+                확대하지 않은 상태에서는
+                사진 이동하지 않음
+            */
 
-            scale = 1;
+            if (
+                scale <= 1
+            ) {
 
-            positionX = 0;
-            positionY = 0;
+                return;
+
+            }
+
+
+
+            isDragging =
+                true;
+
+
+
+            startX =
+                event.clientX
+                - positionX;
+
+
+
+            startY =
+                event.clientY
+                - positionY;
+
+
+
+            lightboxImage.classList.add(
+                "dragging"
+            );
+
+
+
+            try {
+
+                lightboxImage.setPointerCapture(
+                    event.pointerId
+                );
+
+            }
+
+            catch (error) {
+
+                /*
+                    실패해도 무시
+                */
+
+            }
 
         }
+    );
+
+}
 
 
-        updateTransform();
+
+/* =========================================================
+   확대된 사진 이동
+========================================================= */
+
+if (lightboxImage) {
+
+    lightboxImage.addEventListener(
+        "pointermove",
+        (event) => {
+
+            if (!isDragging) {
+
+                return;
+
+            }
+
+
+
+            positionX =
+                event.clientX
+                - startX;
+
+
+
+            positionY =
+                event.clientY
+                - startY;
+
+
+
+            updateTransform();
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   확대 사진 드래그 종료
+========================================================= */
+
+if (lightboxImage) {
+
+    lightboxImage.addEventListener(
+        "pointerup",
+        stopDragging
+    );
+
+
+    lightboxImage.addEventListener(
+        "pointercancel",
+        stopDragging
+    );
+
+}
+
+
+
+function stopDragging() {
+
+    isDragging =
+        false;
+
+
+    if (lightboxImage) {
+
+        lightboxImage.classList.remove(
+            "dragging"
+        );
 
     }
-);
+
+}
 
 
-/* =============================
-   사진 transform
-============================= */
+
+/* =========================================================
+   이미지 더블클릭
+
+   1배 → 2배
+
+   확대 상태 → 원래 크기
+========================================================= */
+
+if (lightboxImage) {
+
+    lightboxImage.addEventListener(
+        "dblclick",
+        () => {
+
+            if (
+                scale === 1
+            ) {
+
+                scale =
+                    2;
+
+            }
+
+            else {
+
+                scale =
+                    1;
+
+
+                positionX =
+                    0;
+
+
+                positionY =
+                    0;
+
+            }
+
+
+
+            updateTransform();
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   확대 위치 적용
+========================================================= */
 
 function updateTransform() {
+
+    if (!lightboxImage) {
+
+        return;
+
+    }
+
 
     lightboxImage.style.transform =
         `
@@ -300,239 +1478,445 @@ function updateTransform() {
 }
 
 
-/* =============================
-   뷰어 초기화
-============================= */
+
+/* =========================================================
+   이미지 뷰어 초기화
+========================================================= */
 
 function resetViewer() {
 
-    scale = 1;
+    scale =
+        1;
 
-    positionX = 0;
-    positionY = 0;
 
-    isDragging = false;
+    positionX =
+        0;
 
-    lightboxImage.classList.remove(
-        "dragging"
-    );
+
+    positionY =
+        0;
+
+
+    isDragging =
+        false;
+
+
+
+    if (lightboxImage) {
+
+        lightboxImage.classList.remove(
+            "dragging"
+        );
+
+    }
+
+
 
     updateTransform();
 
 }
 
 
-/* ======================================
-   하트 효과
-====================================== */
 
-const heartButton =
-    document.getElementById(
-        "heartButton"
-    );
+/* =========================================================
+   상어 / 하트 / 달 효과 설정
+========================================================= */
 
-const heartMessage =
-    document.getElementById(
-        "heartMessage"
-    );
+const effectConfig = {
+
+    /*
+        상어
+    */
+
+    shark: {
+
+        count:
+            60,
+
+        emojis: [
+            "🦈",
+            "🦈",
+            "🦈",
+            "🌊",
+            "🫧"
+        ]
+
+    },
+
+
+    /*
+        하트
+    */
+
+    heart: {
+
+        count:
+            100,
+
+        emojis: [
+            "❤️",
+            "💕",
+            "💗",
+            "💖",
+            "💓"
+        ]
+
+    },
+
+
+    /*
+        달
+    */
+
+    moon: {
+
+        count:
+            70,
+
+        emojis: [
+            "🌙",
+            "🌙",
+            "🌕",
+            "⭐",
+            "✨"
+        ]
+
+    }
+
+};
+
 
 
 /*
-    아직 사라지지 않은 하트 +
-    앞으로 생성될 하트까지 포함한 개수
+    아직 떨어지고 있는 하트 +
+    앞으로 생성될 하트 수
 
-    이게 0이 되면
-    "안녕"을 사라지게 함
+    전부 0이 되면
+    "츠키야 사랑해 !" 글씨를
+    천천히 없앰
 */
 
-let remainingHearts = 0;
+let remainingHearts =
+    0;
 
 
-/* =============================
-   하트 버튼 클릭
-============================= */
 
-heartButton.addEventListener(
-    "click",
-    () => {
+/* =========================================================
+   상어 / 하트 / 달 버튼 클릭
+========================================================= */
 
-        /*
-            버튼 위의 "안녕" 표시
-        */
+effectButtons.forEach(
+    (button) => {
 
-        heartMessage.classList.add(
-            "show"
+        button.addEventListener(
+            "click",
+            () => {
+
+                const effectName =
+                    button.dataset.effect;
+
+
+                launchEffect(
+                    effectName
+                );
+
+            }
         );
-
-
-        const heartCount = 100;
-
-
-        /*
-            앞으로 생성될 하트까지
-            미리 카운트
-        */
-
-        remainingHearts += heartCount;
-
-
-        /*
-            하트 100개를
-            조금씩 시간차를 두고 생성
-        */
-
-        for (
-            let i = 0;
-            i < heartCount;
-            i++
-        ) {
-
-            setTimeout(
-                createHeart,
-                i * 90
-            );
-
-        }
 
     }
 );
 
 
-/* =============================
-   하트 하나 생성
-============================= */
 
-function createHeart() {
+/* =========================================================
+   낙하 효과 시작
+========================================================= */
 
-    const heart =
-        document.createElement("div");
+function launchEffect(
+    effectName
+) {
 
-
-    const hearts = [
-        "❤️",
-        "💕",
-        "💗",
-        "💖",
-        "💓"
-    ];
-
-
-    heart.classList.add(
-        "falling-heart"
-    );
-
-
-    /* 랜덤 종류 */
-
-    heart.innerText =
-        hearts[
-        Math.floor(
-            Math.random()
-            * hearts.length
-        )
+    const config =
+        effectConfig[
+        effectName
         ];
 
 
-    /* 화면 랜덤 위치 */
+    if (!config) {
 
-    heart.style.left =
-        Math.random() * 100
-        + "vw";
+        return;
 
+    }
 
-    /* 랜덤 크기 */
-
-    heart.style.fontSize =
-        (
-            17
-            + Math.random() * 20
-        )
-        + "px";
-
-
-    /* 랜덤 낙하 속도 */
-
-    const duration =
-        4.5
-        + Math.random() * 2.5;
-
-
-    heart.style.animationDuration =
-        duration + "s";
-
-
-    /* 좌우 움직임 */
-
-    heart.style.setProperty(
-        "--move1",
-        randomMove(60) + "px"
-    );
-
-    heart.style.setProperty(
-        "--move2",
-        randomMove(90) + "px"
-    );
-
-    heart.style.setProperty(
-        "--move3",
-        randomMove(100) + "px"
-    );
-
-    heart.style.setProperty(
-        "--move4",
-        randomMove(110) + "px"
-    );
-
-
-    document.body.appendChild(
-        heart
-    );
 
 
     /*
-        이 하트의 애니메이션이 끝나면
-        삭제
+        하트일 경우
+
+        버튼 위에
+        "츠키야 사랑해 !"
+        표시
     */
 
-    setTimeout(() => {
+    if (
+        effectName
+        === "heart"
+    ) {
 
-        heart.remove();
+        if (heartMessage) {
 
-
-        /*
-            남은 하트 감소
-        */
-
-        remainingHearts--;
-
-
-        /*
-            모든 하트가 사라짐
-        */
-
-        if (remainingHearts === 0) {
-
-            /*
-                버튼 위의 안녕도
-                서서히 사라짐
-            */
-
-            heartMessage.classList.remove(
+            heartMessage.classList.add(
                 "show"
             );
 
         }
 
-    }, duration * 1000 + 300);
+
+        /*
+            앞으로 만들어질 하트도
+            미리 카운트
+        */
+
+        remainingHearts +=
+            config.count;
+
+    }
+
+
+
+    /*
+        한꺼번에 전부 만들지 않고
+
+        약간씩 시간차를 두고
+        생성
+    */
+
+    for (
+        let i = 0;
+        i < config.count;
+        i++
+    ) {
+
+        setTimeout(
+            () => {
+
+                createFallingEmoji(
+                    effectName,
+                    config.emojis
+                );
+
+            },
+            i * 70
+        );
+
+    }
 
 }
 
 
-/* =============================
-   하트 좌우 움직임
-============================= */
 
-function randomMove(range) {
+/* =========================================================
+   떨어지는 이모티콘 하나 생성
+========================================================= */
+
+function createFallingEmoji(
+    effectName,
+    emojiList
+) {
+
+    const emoji =
+        document.createElement(
+            "div"
+        );
+
+
+    emoji.classList.add(
+        "falling-emoji"
+    );
+
+
+
+    /*
+        랜덤 이모티콘
+    */
+
+    emoji.innerText =
+        emojiList[
+        Math.floor(
+            Math.random()
+            * emojiList.length
+        )
+        ];
+
+
+
+    /*
+        화면의 랜덤한 가로 위치
+    */
+
+    emoji.style.left =
+        Math.random()
+        * 100
+        + "vw";
+
+
+
+    /*
+        랜덤 크기
+    */
+
+    emoji.style.fontSize =
+        (
+            18
+            +
+            Math.random()
+            * 22
+        )
+        + "px";
+
+
+
+    /*
+        떨어지는 시간
+
+        약 4.8 ~ 7.5초
+    */
+
+    const duration =
+        4.8
+        +
+        Math.random()
+        * 2.7;
+
+
+
+    emoji.style.animationDuration =
+        duration
+        + "s";
+
+
+
+    /*
+        떨어지면서
+        좌우로 흔들리는 정도
+    */
+
+    emoji.style.setProperty(
+        "--move1",
+        randomMove(
+            65
+        )
+        + "px"
+    );
+
+
+    emoji.style.setProperty(
+        "--move2",
+        randomMove(
+            95
+        )
+        + "px"
+    );
+
+
+    emoji.style.setProperty(
+        "--move3",
+        randomMove(
+            110
+        )
+        + "px"
+    );
+
+
+    emoji.style.setProperty(
+        "--move4",
+        randomMove(
+            125
+        )
+        + "px"
+    );
+
+
+
+    /*
+        화면에 추가
+    */
+
+    document.body.appendChild(
+        emoji
+    );
+
+
+
+    /*
+        떨어지는 애니메이션이
+        끝나면 HTML에서 삭제
+    */
+
+    setTimeout(
+        () => {
+
+            emoji.remove();
+
+
+
+            /*
+                하트 효과인 경우에만
+
+                남은 하트 개수 감소
+            */
+
+            if (
+                effectName
+                === "heart"
+            ) {
+
+                remainingHearts--;
+
+
+
+                /*
+                    마지막 하트까지
+                    전부 사라졌다면
+
+                    사랑해 글씨도
+                    천천히 사라지게 함
+                */
+
+                if (
+                    remainingHearts
+                    === 0
+                ) {
+
+                    if (heartMessage) {
+
+                        heartMessage.classList.remove(
+                            "show"
+                        );
+
+                    }
+
+                }
+
+            }
+
+        },
+        duration
+        * 1000
+        + 300
+    );
+
+}
+
+
+
+/* =========================================================
+   좌우 랜덤 이동값
+========================================================= */
+
+function randomMove(
+    range
+) {
 
     return (
         Math.random()

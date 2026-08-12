@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Our Moments</title>
+    <title>sub ❤️ tsuki</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -15,74 +15,407 @@
     <main class="page">
 
         <header class="header">
+            <p class="eyebrow">OUR MOMENTS</p>
             <h1>sub ❤️ tsuki</h1>
         </header>
 
 
-        <section class="gallery">
+        <!-- =========================
+             사귄 날짜
+        ========================= -->
 
-            <button class="photo-card">
-                <img src="images/cat.jpg" alt="사진 1">
+        <section class="love-stats" aria-label="우리의 날짜">
+
+            <article class="stat-card">
+
+                <span class="stat-label">
+                    함께한 시간
+                </span>
+
+                <strong id="daysTogether" class="stat-number">
+                    -
+                </strong>
+
+                <span class="stat-unit">
+                    일째
+                </span>
+
+                <small>
+                    2026.06.10부터
+                </small>
+
+                <small>
+                    message:우리 츠키 항상 화이팅 ~
+                    너무 사랑해 ! ㅎㅎ (from.sub)
+                </small>
+
+            </article>
+
+
+            <article class="stat-card next-card">
+
+                <span class="stat-label">
+                    다음 기념일
+                </span>
+
+                <strong id="nextMilestone" class="stat-number">
+                    -
+                </strong>
+
+                <span class="stat-unit">
+                    일
+                </span>
+
+                <small id="countdownText">
+                    계산 중...
+                </small>
+
+            </article>
+
+        </section>
+
+
+        <!-- =========================
+             메인 사진 슬라이드
+        ========================= -->
+
+        <section class="hero-section">
+
+            <div id="carousel" class="carousel">
+
+                <div id="carouselTrack" class="carousel-track">
+
+                    <div class="slide">
+                        <img src="images/basesub.webp" alt="우리 사진 1" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/bbuuu.webp" alt="우리 사진 2" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/cat.webp" alt="우리 사진 3" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/catsuki1.webp" alt="우리 사진 4" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/catsuki2.webp" alt="우리 사진 5" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/catsuki3.webp" alt="우리 사진 6" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/cutetuski.webp" alt="우리 사진 7" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/favorite.webp" alt="우리 사진 8" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/glass.webp" alt="우리 사진 9" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/iccisub.webp" alt="우리 사진 10" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/insangnecut.webp" alt="우리 사진 11" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/kiss.webp" alt="우리 사진 12" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/pricura.webp" alt="우리 사진 13" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/sinhodang.webp" alt="우리 사진 14" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/subsuki.webp" alt="우리 사진 15" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/subsuki12.webp" alt="우리 사진 16" draggable="false">
+                    </div>
+                    <div class="slide">
+                        <img src="images/sub1.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/sub2.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/sub3.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/sub4.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/sub5.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/subsuki2.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/subsuki4.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                    <div class="slide">
+                        <img src="images/subsuki5.webp" alt="우리 사진" draggable="false">
+                    </div>
+
+                </div>
+
+
+                <button id="prevSlide" class="nav-button prev-button" type="button" aria-label="이전 사진">
+                    ‹
+                </button>
+
+
+                <button id="nextSlide" class="nav-button next-button" type="button" aria-label="다음 사진">
+                    ›
+                </button>
+
+
+                <div id="slideCounter" class="slide-counter">
+                    1 / 24
+                </div>
+
+            </div>
+
+
+            <p class="swipe-hint">
+                사진을 옆으로 넘겨보세요
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             상어 / 하트 / 달
+        ========================= -->
+
+        <section class="effect-panel" aria-label="이모티콘 효과">
+
+            <button class="effect-button shark-button" type="button" data-effect="shark" aria-label="상어 뿌리기">
+
+                <span class="effect-emoji">
+                    🦈
+                </span>
+
+                <span>
+                    섭
+                </span>
+
             </button>
 
-            <button class="photo-card">
-                <img src="images/basesub.jpg" alt="사진 2">
-            </button>
 
-            <button class="photo-card">
-                <img src="images/bbuuu.png" alt="사진 3">
-            </button>
+            <div class="heart-wrap">
 
-            <button class="photo-card">
-                <img src="images/cutetuski.jpg" alt="사진 4">
-            </button>
+                <div id="heartMessage" class="heart-message">
+                    츠키야 사랑해 !
+                </div>
 
-            <button class="photo-card">
-                <img src="images/glass.jpg" alt="사진 5">
-            </button>
 
-            <button class="photo-card">
-                <img src="images/insangnecut.jpg" alt="사진 6">
-            </button>
+                <button class="effect-button heart-button" id="heartButton" type="button" data-effect="heart"
+                    aria-label="하트 뿌리기">
 
-            <button class="photo-card">
-                <img src="images/sinhodang.jpg" alt="사진 7">
-            </button>
+                    <span class="effect-emoji">
+                        ❤️
+                    </span>
 
-            <button class="photo-card">
-                <img src="images/pricura.jpg" alt="사진 7">
-            </button>
+                    <span>
+                        하트
+                    </span>
 
-            <button class="photo-card">
-                <img src="images/favorite.jpg" alt="사진 7">
+                </button>
+
+            </div>
+
+
+            <button class="effect-button moon-button" type="button" data-effect="moon" aria-label="달 뿌리기">
+
+                <span class="effect-emoji">
+                    🌙
+                </span>
+
+                <span>
+                    츠키
+                </span>
+
             </button>
 
         </section>
 
 
-        <div class="heart-control">
+        <!-- =========================
+             전체 사진
+        ========================= -->
 
-            <div id="heartMessage" class="heart-message">
-                츠키야 사랑해 !
+        <section class="photo-gallery-section">
+
+            <div class="gallery-title">
+
+                <span>
+                    OUR PHOTOS
+                </span>
+
+                <h2>
+                    우리의 순간들 ❤️
+                </h2>
+
             </div>
 
-            <button id="heartButton" class="heart-button" type="button">
-                ❤️
-            </button>
 
-        </div>
+            <div class="gallery">
+
+                <button class="photo-card" type="button">
+                    <img src="images/basesub.webp" alt="우리 사진 1" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/bbuuu.webp" alt="우리 사진 2" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/cat.webp" alt="우리 사진 3" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/catsuki1.webp" alt="우리 사진 4" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/catsuki2.webp" alt="우리 사진 5" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/catsuki3.webp" alt="우리 사진 6" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/cutetuski.webp" alt="우리 사진 7" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/favorite.webp" alt="우리 사진 8" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/glass.webp" alt="우리 사진 9" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/iccisub.webp" alt="우리 사진 10" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/insangnecut.webp" alt="우리 사진 11" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/kiss.webp" alt="우리 사진 12" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/pricura.webp" alt="우리 사진 13" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/sinhodang.webp" alt="우리 사진 14" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/subsuki.webp" alt="우리 사진 15" loading="lazy">
+                </button>
+
+
+                <button class="photo-card" type="button">
+                    <img src="images/subsuki2.webp" alt="우리 사진 16" loading="lazy">
+                </button>
+                <button class="photo-card" type="button">
+                    <img src="images/sub1.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/sub2.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/sub3.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/sub4.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/sub5.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/subsuki2.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/subsuki4.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+                <button class="photo-card" type="button">
+                    <img src="images/subsuki5.webp" alt="우리 사진" loading="lazy">
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <p class="footer-message">
+            오늘도 같이 있어서 좋아 ☁️
+        </p>
 
     </main>
 
 
-    <!-- 이미지 뷰어 -->
+    <!-- =========================
+         이미지 뷰어
+    ========================= -->
 
     <div id="lightbox" class="lightbox">
 
-        <button id="closeLightbox" class="close-lightbox">
+        <button id="closeLightbox" class="close-lightbox" type="button" aria-label="사진 닫기">
             ✕
         </button>
-
 
 
         <div id="lightboxArea" class="lightbox-area">
