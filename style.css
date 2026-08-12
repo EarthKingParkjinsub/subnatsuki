@@ -1,56 +1,326 @@
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
 body {
     margin: 0;
+
     min-height: 100vh;
+
+    font-family:
+        Arial,
+        "Apple SD Gothic Neo",
+        sans-serif;
+
+    color: #333;
+
+    background:
+        linear-gradient(135deg,
+            #fff8fa 0%,
+            #ffeef2 50%,
+            #fff8fa 100%);
+}
+
+
+/* =========================
+   전체 페이지
+========================= */
+
+.page {
+    width: min(1050px, 92%);
+
+    margin: 0 auto;
+
+    padding:
+        50px 0 100px;
+}
+
+
+/* =========================
+   제목
+========================= */
+
+.header {
+    text-align: center;
+
+    margin-bottom: 35px;
+}
+
+
+.header h1 {
+    margin: 0;
+
+    font-size: 36px;
+}
+
+
+.header p {
+    margin-top: 10px;
+
+    color: #888;
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   메인 사진
+========================= */
+
+.main-section {
+    scroll-margin-top: 25px;
+}
+
+
+.main-photo-wrapper {
+    position: relative;
+
+    width: 100%;
 
     display: flex;
     justify-content: center;
-    align-items: center;
-
-    overflow: hidden;
-
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    text-align: center;
-}
-
-img {
-    display: block;
-
-    max-width: 90vw;
-    max-height: 70vh;
 
     margin-bottom: 20px;
-
-    border-radius: 10px;
 }
 
-#heartButton {
-    padding: 12px 25px;
 
-    font-size: 20px;
+#mainPhoto {
+    display: block;
+
+    width: 100%;
+    max-width: 780px;
+
+    height: 540px;
+
+    object-fit: contain;
+
+    background-color:
+        rgba(255, 255, 255, 0.7);
+
+    border-radius: 26px;
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.14);
+
+    cursor: zoom-in;
+
+    transition:
+        transform 0.35s ease,
+        opacity 0.25s ease,
+        box-shadow 0.35s ease;
+}
+
+
+#mainPhoto:hover {
+    transform: scale(1.01);
+
+    box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.19);
+}
+
+
+#mainPhoto.changing {
+    transform: scale(0.96);
+
+    opacity: 0;
+}
+
+
+/* 클릭해서 크게 보기 */
+
+.zoom-guide {
+    position: absolute;
+
+    bottom: 18px;
+    left: 50%;
+
+    transform:
+        translateX(-50%) translateY(5px);
+
+    padding:
+        8px 14px;
+
+    border-radius: 20px;
+
+    color: white;
+
+    background:
+        rgba(0, 0, 0, 0.55);
+
+    font-size: 13px;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.main-photo-wrapper:hover .zoom-guide {
+
+    opacity: 1;
+
+    transform:
+        translateX(-50%) translateY(0);
+}
+
+
+/* =========================
+   하트 버튼
+========================= */
+
+.heart-button {
+    display: block;
+
+    width: 60px;
+    height: 60px;
+
+    margin:
+        0 auto 42px;
+
+    padding: 0;
 
     border: none;
-    border-radius: 30px;
+    border-radius: 50%;
+
+    background: white;
+
+    font-size: 28px;
 
     cursor: pointer;
 
-    background-color: #ff4d6d;
-    color: white;
+    box-shadow:
+        0 7px 22px rgba(255, 70, 110, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-/* 떨어지는 하트 */
 
-.heart {
+.heart-button:hover {
+    transform: scale(1.13);
+
+    box-shadow:
+        0 10px 30px rgba(255, 70, 110, 0.4);
+}
+
+
+.heart-button:active {
+    transform: scale(0.9);
+}
+
+
+/* =========================
+   갤러리
+========================= */
+
+.gallery {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+
+.photo-card {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 3;
+
+    padding: 0;
+
+    overflow: hidden;
+
+    border: none;
+    border-radius: 19px;
+
+    background: none;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.1);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.photo-card img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.5s ease,
+        filter 0.4s ease;
+}
+
+
+/* hover */
+
+.photo-card:hover {
+    transform:
+        translateY(-8px) scale(1.025);
+
+    box-shadow:
+        0 16px 35px rgba(0, 0, 0, 0.2);
+}
+
+
+.photo-card:hover img {
+    transform: scale(1.1);
+
+    filter:
+        brightness(1.05) saturate(1.05);
+}
+
+
+/* 선택된 사진 */
+
+.photo-card.active {
+    outline:
+        4px solid #ff6b81;
+
+    outline-offset: -4px;
+}
+
+
+/* =========================
+   떨어지는 하트
+========================= */
+
+.falling-heart {
     position: fixed;
+
     top: -60px;
 
-    pointer-events: none;
-    z-index: 9999;
+    z-index: 9000;
 
-    animation: heartFall linear forwards;
+    pointer-events: none;
+
+    animation:
+        heartFall linear forwards;
 }
+
 
 @keyframes heartFall {
 
@@ -61,33 +331,251 @@ img {
         opacity: 0;
     }
 
-    5% {
+
+    8% {
         opacity: 1;
     }
+
 
     25% {
         transform:
-            translateX(var(--move1)) translateY(25vh) rotate(70deg);
+            translateX(var(--move1)) translateY(25vh) rotate(45deg);
     }
+
 
     50% {
         transform:
-            translateX(var(--move2)) translateY(50vh) rotate(150deg);
+            translateX(var(--move2)) translateY(50vh) rotate(100deg);
     }
+
 
     75% {
         transform:
-            translateX(var(--move3)) translateY(75vh) rotate(230deg);
+            translateX(var(--move3)) translateY(75vh) rotate(180deg);
     }
 
-    90% {
+
+    92% {
         opacity: 1;
     }
 
+
     100% {
         transform:
-            translateX(var(--move4)) translateY(110vh) rotate(320deg);
+            translateX(var(--move4)) translateY(110vh) rotate(260deg);
 
         opacity: 0;
     }
+
+}
+
+
+/* =========================
+   라이트박스
+========================= */
+
+.lightbox {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background:
+        rgba(0, 0, 0, 0.94);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+
+.lightbox.open {
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* 이미지가 움직이는 영역 */
+
+.lightbox-area {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    cursor: default;
+}
+
+
+#lightboxImage {
+    display: block;
+
+    max-width: 90vw;
+    max-height: 88vh;
+
+    object-fit: contain;
+
+    user-select: none;
+
+    cursor: grab;
+
+    touch-action: none;
+
+    transform-origin:
+        center center;
+
+    will-change: transform;
+}
+
+
+#lightboxImage.dragging {
+    cursor: grabbing;
+}
+
+
+/* 닫기 버튼 */
+
+.close-lightbox {
+    position: absolute;
+
+    top: 24px;
+    right: 28px;
+
+    z-index: 10002;
+
+    width: 50px;
+    height: 50px;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 50%;
+
+    color: white;
+
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.close-lightbox:hover {
+    transform: scale(1.1);
+
+    background:
+        rgba(255, 255, 255, 0.25);
+}
+
+
+/* 사용법 */
+
+.viewer-info {
+    position: absolute;
+
+    top: 31px;
+    left: 50%;
+
+    z-index: 10002;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        8px 14px;
+
+    border-radius: 20px;
+
+    color:
+        rgba(255, 255, 255, 0.75);
+
+    background:
+        rgba(0, 0, 0, 0.3);
+
+    font-size: 13px;
+
+    pointer-events: none;
+}
+
+
+/* =========================
+   모바일
+========================= */
+
+@media (max-width: 700px) {
+
+    .page {
+        width: 94%;
+
+        padding-top: 30px;
+    }
+
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+
+    #mainPhoto {
+        height: 420px;
+
+        border-radius: 20px;
+    }
+
+
+    .gallery {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 12px;
+    }
+
+
+    .viewer-info {
+        display: none;
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    #mainPhoto {
+        height: 340px;
+    }
+
+
+    .photo-card {
+        border-radius: 14px;
+    }
+
+
+    .close-lightbox {
+        top: 15px;
+        right: 15px;
+
+        width: 45px;
+        height: 45px;
+    }
+
 }
